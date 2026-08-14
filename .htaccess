@@ -1,0 +1,10 @@
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    # Checks to see if a user is attempting to access a valid file or link
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+
+    # If not, it redirects to index.php
+    RewriteRule ^(.*)$ index.php?/$1 [L]
+</IfModule>
