@@ -3,6 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/3.2.4/css/buttons.dataTables.min.css">
+
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.datatables.net/2.3.4/js/dataTables.min.js"></script>
+
+    <script src="https://cdn.datatables.net/buttons/3.2.4/js/dataTables.buttons.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/3.2.4/js/buttons.html5.min.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
     <title>Registro de usuarios</title>
 </head>
 <body>
@@ -47,36 +59,122 @@
 
     </form>
 
+<br><br>
+    <hr>
+
+      <a href="<?php echo base_url('plantillas/plantilla_usuarios.csv'); ?>">
+      Descargar plantilla CSV
+  </a>
+
+  <h3>Importar usuarios</h3>
+
+<form action="<?php echo site_url('usuarios/importar'); ?>" method="post" enctype="multipart/form-data">
+
+    <input type="file" name="archivo_csv" accept=".csv" required>
+
+    <button type="submit">Importar CSV</button>
+
+</form>
+
+<br>
+
+<br><br>
     <hr>
 
     <h2>Usuarios registrados</h2>
 
-    <table border="1" cellpadding="8">
-        <tr>
-            <th>ID</th>
-            <th>Nombre</th>
-            <th>Apellido</th>
-            <th>Correo</th>
-            <th>Teléfono</th>
-            <th>Contraseña Hash</th>
-            <th>CURP/RFC</th>
-            <th>Sexo</th>
-        </tr>
+    <table id="tablaUsuarios" border="1" cellpadding="8">
 
-        <?php foreach ($usuarios as $usuario): ?>
-        <tr>
-            <td><?php echo $usuario->us_id; ?></td>
-            <td><?php echo $usuario->us_nombre; ?></td>
-            <td><?php echo $usuario->us_apellido; ?></td>
-            <td><?php echo $usuario->us_correo; ?></td>
-            <td><?php echo $usuario->us_telefono; ?></td>
-            <td><?php echo $usuario->us_password; ?></td>
-            <td><?php echo $usuario->us_curp_rfc; ?></td>
-            <td><?php echo $usuario->us_sexo; ?></td>
-        </tr>
-        <?php endforeach; ?>
+        <thead>
+            <tr>
+                <th>Seleccionar</th>
+                <th>ID</th>
+                <th>Nombre</th>
+                <th>Apellido</th>
+                <th>Correo</th>
+                <th>Teléfono</th>
+                <th>Contraseña Hash</th>
+                <th>CURP/RFC</th>
+                <th>Sexo</th>
+            </tr>
+        </thead>
+
+        <tbody>
+
+            <?php foreach ($usuarios as $usuario): ?>
+            <tr>
+                <td>
+                    <input
+                        type="checkbox"
+                        class="seleccionar-usuario"
+                        value="<?php echo $usuario->us_id; ?>"
+                    >
+                </td>
+
+                <td><?php echo $usuario->us_id; ?></td>
+                <td><?php echo $usuario->us_nombre; ?></td>
+                <td><?php echo $usuario->us_apellido; ?></td>
+                <td><?php echo $usuario->us_correo; ?></td>
+                <td><?php echo $usuario->us_telefono; ?></td>
+                <td><?php echo $usuario->us_password; ?></td>
+                <td><?php echo $usuario->us_curp_rfc; ?></td>
+                <td><?php echo $usuario->us_sexo; ?></td>
+            </tr>
+            <?php endforeach; ?>
+
+        </tbody>
 
     </table>
+
+    </table>
+
+
+    <script>
+    $(document).ready(function() {
+
+        var tabla = $('#tablaUsuarios').DataTable({
+            dom: 'Bfrtip',
+
+            buttons: [
+                {
+                    extend: 'excelHtml5',
+                    text: 'Exportar Excel',
+                    title: 'Usuarios registrados',
+                    exportOptions: {
+                        columns: ':not(:first-child)',
+
+                        rows: function(idx, data, node) {
+                            return $(node)
+                                .find('.seleccionar-usuario')
+                                .is(':checked');
+                        }
+                    } 
+                },
+                {
+                    extend: 'pdfHtml5',
+                    text: 'Exportar PDF',
+                    title: 'Usuarios registrados',
+                    orientation: 'landscape',
+                    pageSize: 'A4',
+                    exportOptions: {
+                        columns: ':not(:first-child)',
+
+                        rows: function(idx, data, node) {
+                            return $(node)
+                                .find('.seleccionar-usuario')
+                                .is(':checked');
+                        }
+                    }
+                }
+            ]
+       });
+
+    });
+    </script>
+
+
+
+
 
     <h2>Total de usuarios registrados</h2>
     

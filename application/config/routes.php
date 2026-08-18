@@ -55,3 +55,4 @@ $route['translate_uri_dashes'] = FALSE;
 
 $route['usuarios'] = 'usuarios/index';
 $route['usuarios/guardar'] = 'usuarios/guardar';
+$route['usuarios/importar'] = 'usuarios/importar';
