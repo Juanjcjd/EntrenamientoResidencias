@@ -17,7 +17,16 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
     <title>Registro de usuarios</title>
 </head>
+
+<a href="<?php echo site_url('logout'); ?>">
+    <button type="button">Cerrar sesión</button>
+</a>
+
+<br><br>
+
 <body>
+
+ <?php if ($this->session->userdata('us_rol') == 'Administrador'): ?>
 
     <h2>Registro de usuarios</h2>
 
@@ -29,6 +38,10 @@
 
         <label>Apellido:</label>
         <input type="text" name="us_apellido" required>
+        <br><br>
+
+        <label>Usuario:</label>
+        <input type="text" name="us_usuario" required>
         <br><br>
 
         <label>Correo:</label>
@@ -58,6 +71,8 @@
         <button type="submit">Guardar usuario</button>
 
     </form>
+
+ <?php endif; ?>    
 
 <br><br>
     <hr>
@@ -91,11 +106,13 @@
                 <th>ID</th>
                 <th>Nombre</th>
                 <th>Apellido</th>
+                <th>Usuario</th>
                 <th>Correo</th>
                 <th>Teléfono</th>
                 <th>Contraseña Hash</th>
                 <th>CURP/RFC</th>
                 <th>Sexo</th>
+                <th>Acciones</th>
             </tr>
         </thead>
 
@@ -114,18 +131,42 @@
                 <td><?php echo $usuario->us_id; ?></td>
                 <td><?php echo $usuario->us_nombre; ?></td>
                 <td><?php echo $usuario->us_apellido; ?></td>
+                <td><?php echo $usuario->us_usuario; ?></td>
                 <td><?php echo $usuario->us_correo; ?></td>
                 <td><?php echo $usuario->us_telefono; ?></td>
                 <td><?php echo $usuario->us_password; ?></td>
                 <td><?php echo $usuario->us_curp_rfc; ?></td>
                 <td><?php echo $usuario->us_sexo; ?></td>
+
+                <td>
+
+                    <?php if (
+                        $this->session->userdata('us_rol') == 'Administrador' ||
+                        $this->session->userdata('us_id') == $usuario->us_id
+                    ): ?>
+
+                        <a href="<?php echo site_url('usuarios/editar/' . $usuario->us_id); ?>">
+                            <button type="button">Editar</button>
+                        </a>
+
+                    <?php endif; ?>
+
+                    <?php if ($this->session->userdata('us_rol') == 'Administrador'): ?>
+
+                        <a href="<?php echo site_url('usuarios/eliminar/' . $usuario->us_id); ?>"
+                           onclick="return confirm('¿Seguro que deseas eliminar este usuario?');">
+                            <button type="button">Eliminar</button>
+                        </a>
+
+                    <?php endif; ?>
+
+                </td>
             </tr>
             <?php endforeach; ?>
 
         </tbody>
 
-    </table>
-
+            </tbody>
     </table>
 
 

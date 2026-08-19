@@ -56,3 +56,11 @@ $route['translate_uri_dashes'] = FALSE;
 $route['usuarios'] = 'usuarios/index';
 $route['usuarios/guardar'] = 'usuarios/guardar';
 $route['usuarios/importar'] = 'usuarios/importar';
+
+$route['login'] = 'login/index';
+$route['login/autenticar'] = 'login/autenticar';
+$route['logout'] = 'login/logout';
+
+$route['usuarios/editar/(:num)'] = 'usuarios/editar/$1';
+$route['usuarios/actualizar/(:num)'] = 'usuarios/actualizar/$1';
+$route['usuarios/eliminar/(:num)'] = 'usuarios/eliminar/$1';
